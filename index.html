@@ -41,10 +41,7 @@
     <div id="canvas"></div>
 
     <div class="canvas-toolbar">
-      <button id="btn-spawn" class="btn btn-primary">
-        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="currentColor"/></svg>
-        Thêm token mới
-      </button>
+      <div id="spawn-buttons" class="spawn-buttons"></div>
       <button id="btn-reset" class="btn btn-ghost">&#8634; Đặt lại kịch bản</button>
       <div class="token-count" id="token-count" hidden>0 token đang chạy</div>
     </div>
@@ -54,7 +51,10 @@
       <span class="legend-item"><i class="dot dot-active"></i>Đang xử lý</span>
       <span class="legend-item"><i class="dot dot-wait"></i>Chờ quyết định</span>
       <span class="legend-item"><i class="dot dot-auto"></i>Tự động chạy</span>
+      <span class="legend-item"><i class="dot dot-stuck"></i>Kẹt / incident</span>
     </div>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
   </section>
 
   <aside class="sidebar">
@@ -62,6 +62,41 @@
       <h2 id="concept-title">Khái niệm</h2>
       <p id="concept-subtitle" class="muted"></p>
       <ul id="concept-list"></ul>
+    </div>
+
+    <div class="panel broker-panel" id="broker-panel" hidden>
+      <h2>Message broker (kiểu Zeebe)</h2>
+      <p class="muted">Message ghép theo <b>tên + correlation key</b>; TTL cho phép message đến sớm vẫn được nhận.</p>
+      <h3>Subscription đang mở</h3>
+      <ul class="broker-list" id="broker-starts"></ul>
+      <ul class="broker-list" id="broker-subs"></ul>
+      <h3>Buffer (TTL còn lại)</h3>
+      <ul class="broker-list" id="broker-buffer"></ul>
+      <form id="broker-form" class="broker-form">
+        <label class="tl-field"><span>Tên message</span><select id="broker-name"></select></label>
+        <label class="tl-field"><span>Correlation key</span>
+          <input id="broker-key" list="broker-keys" autocomplete="off" spellcheck="false">
+          <datalist id="broker-keys"></datalist>
+        </label>
+        <label class="tl-field"><span>TTL</span>
+          <select id="broker-ttl">
+            <option value="0">0s — không giữ</option>
+            <option value="30">30s</option>
+            <option value="60" selected>60s</option>
+          </select>
+        </label>
+        <button type="submit" class="tl-btn tl-btn-primary">Publish message</button>
+      </form>
+      <form id="signal-form" class="broker-form" hidden>
+        <label class="tl-field"><span>Signal</span><select id="signal-name"></select></label>
+        <button type="submit" class="tl-btn tl-btn-branch">📡 Broadcast signal</button>
+      </form>
+    </div>
+
+    <div class="panel dmn-panel" id="dmn-panel" hidden>
+      <h2 id="dmn-title">Bảng quyết định DMN</h2>
+      <div class="dmn-scroll"><table id="dmn-table" class="dmn-table"></table></div>
+      <p id="dmn-note" class="muted"></p>
     </div>
 
     <div class="panel log-panel">
