@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>BPMN Token Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Xem trực quan token di chuyển qua từng phần tử BPMN — gateway, task, boundary event — để hiểu rõ luồng xử lý trong Camunda.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0f14'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%2343d9c8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/diagram-js.css">
+<link rel="stylesheet" href="vendor/bpmn-js.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div class="brand-text">
+      <h1>BPMN Token Lab</h1>
+      <p>Xem token chạy qua từng phần tử &mdash; học luồng xử lý Camunda bằng mắt</p>
+    </div>
+  </div>
+  <div class="topbar-controls">
+    <label class="field">
+      <span>Kịch bản</span>
+      <select id="scenario-select"></select>
+    </label>
+    <label class="field speed-field">
+      <span>Tốc độ</span>
+      <input type="range" id="speed-range" min="0.5" max="2.5" step="0.25" value="1">
+      <span id="speed-value">1.0&times;</span>
+    </label>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="canvas-wrap">
+    <div id="canvas"></div>
+
+    <div class="canvas-toolbar">
+      <button id="btn-spawn" class="btn btn-primary">
+        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="currentColor"/></svg>
+        Thêm token mới
+      </button>
+      <button id="btn-reset" class="btn btn-ghost">&#8634; Đặt lại kịch bản</button>
+      <div class="token-count" id="token-count" hidden>0 token đang chạy</div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-title">Chú giải</span>
+      <span class="legend-item"><i class="dot dot-active"></i>Đang xử lý</span>
+      <span class="legend-item"><i class="dot dot-wait"></i>Chờ quyết định</span>
+      <span class="legend-item"><i class="dot dot-auto"></i>Tự động chạy</span>
+    </div>
+  </section>
+
+  <aside class="sidebar">
+    <div class="panel concept-panel">
+      <h2 id="concept-title">Khái niệm</h2>
+      <p id="concept-subtitle" class="muted"></p>
+      <ul id="concept-list"></ul>
+    </div>
+
+    <div class="panel log-panel">
+      <div class="log-header">
+        <h2>Nhật ký token</h2>
+        <button id="btn-clear-log" class="btn-text">Xoá</button>
+      </div>
+      <ol id="log-list" class="log-list"></ol>
+    </div>
+  </aside>
+</main>
+
+<footer class="foot">
+  Dựng bằng <a href="https://bpmn.io" target="_blank" rel="noopener">bpmn-js</a> (MIT) &mdash; sơ đồ là ví dụ minh hoạ, không phải quy trình thật.
+</footer>
+
+<script src="vendor/bpmn-navigated-viewer.development.js"></script>
+<script src="scenarios.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
