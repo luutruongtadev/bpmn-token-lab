@@ -643,6 +643,8 @@
     });
   }
 
+  var uploadedGraph = null;
+
   function buildSpawnButtons() {
     spawnButtons.innerHTML = '';
     var starts = graph.starts.filter(function (s) { return !s.callable; });
@@ -660,12 +662,16 @@
   }
 
   function loadScenario(id) {
-    var scenario = window.SCENARIOS.find(function (s) { return s.id === id; });
-    if (!scenario) return;
-
+    if (id === 'upload' && uploadedGraph) {
+      graph = uploadedGraph;
+    } else {
+      var found = window.SCENARIOS.find(function (s) { return s.id === id; });
+      if (!found) return;
+      if (!preparedCache[id]) preparedCache[id] = window.TokenLab.prepareScenario(found);
+      graph = preparedCache[id];
+    }
+    var scenario = graph.scenario;
     if (renderer) renderer.alive = false;
-    if (!preparedCache[id]) preparedCache[id] = window.TokenLab.prepareScenario(scenario);
-    graph = preparedCache[id];
     var myRenderer = createRenderer(graph);
     renderer = myRenderer;
     engine = null;
@@ -714,6 +720,32 @@
 
   scenarioSelect.addEventListener('change', function () {
     loadScenario(scenarioSelect.value);
+  });
+
+  var fileInput = document.getElementById('file-input');
+  fileInput.addEventListener('change', function () {
+    var file = fileInput.files[0];
+    fileInput.value = '';
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        uploadedGraph = window.TokenLab.importBpmn(String(reader.result), file.name);
+      } catch (err) {
+        renderer.log('Không thể dùng file "' + file.name + '": ' + err.message, 'warn');
+        return;
+      }
+      var opt = scenarioSelect.querySelector('option[value="upload"]');
+      if (!opt) {
+        opt = document.createElement('option');
+        opt.value = 'upload';
+        scenarioSelect.appendChild(opt);
+      }
+      opt.textContent = '📄 ' + file.name;
+      scenarioSelect.value = 'upload';
+      loadScenario('upload');
+    };
+    reader.readAsText(file);
   });
 
   btnReset.addEventListener('click', function () {

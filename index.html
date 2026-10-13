@@ -28,6 +28,10 @@
       <span>Kịch bản</span>
       <select id="scenario-select"></select>
     </label>
+    <label class="btn btn-ghost upload-btn" title="Tải file .bpmn từ máy để mô phỏng">
+      &#8679; Tải file BPMN
+      <input type="file" id="file-input" accept=".bpmn,.xml,application/xml,text/xml" hidden>
+    </label>
     <label class="field speed-field">
       <span>Tốc độ</span>
       <input type="range" id="speed-range" min="0.5" max="2.5" step="0.25" value="1">
@@ -116,6 +120,7 @@
 <script src="vendor/bpmn-navigated-viewer.development.js"></script>
 <script src="scenarios.js"></script>
 <script src="engine.js"></script>
+<script src="importer.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
